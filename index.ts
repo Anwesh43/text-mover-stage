@@ -74,6 +74,7 @@ class TextBox {
 
     setFocus() {
         this.inputElement.focus()
+        this.inputElement.value = ""
     }
 
     setReadOnly(flag) {
@@ -106,15 +107,20 @@ class TextElement {
         this.state.update(cb)
     }
 
+    getMiddle() {
+        return w / 2 - this.span.offsetWidth
+    }
+
     moveToMiddle(cb : Function) {
-        this.move(cb, w, w / 4)
+        const middle : number = this.getMiddle()
+        this.move(cb, w, middle)
     }
 
     moveOutOfScreen(cb : Function) {
         this.move(() => {
             document.body.removeChild(this.span)
             cb()
-        }, w / 3, 0)
+        }, this.getMiddle(), -this.span.offsetWidth)
     }
 
     startUpdating(cb : Function) {
