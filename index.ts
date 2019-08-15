@@ -2,6 +2,7 @@ const w : number = window.innerWidth
 const h : number = window.innerHeight
 const scGap : number = 0.05
 const delay : number = 50
+const textColor : string = "#f44336"
 
 class State {
 
@@ -21,7 +22,9 @@ class State {
 
     startUpdating(cb : Function) {
         if (this.dir == 0) {
-            this.dir = 1 - 2 * this.prevScale
+            this.scale = 0
+            this.prevScale = 1
+            this.dir = 1
             cb()
         }
     }
@@ -79,5 +82,42 @@ class TextBox {
         } else {
             this.inputElement.removeAttribute('disabled')
         }
+    }
+}
+
+class TextElement {
+
+    span : HTMLSpanElement = document.createElement('span')
+    state : State = new State()
+
+    init(text : string) {
+        this.span.innerText = text
+        this.span.style.color = textColor
+        this.span.style.position = 'absolute'
+        this.span.style.fontSize = `${Math.min(w, h) / 6}px`
+        this.span.style.top = `${h / 2 - Math.min(w, h) / 12}px`
+        this.span.style.left = `${w}px`
+        document.body.appendChild(this.span)
+    }
+
+    move(cb : Function, x1 : number, x2 : number) {
+        const x : number = x1 + (x2 - x1) * this.state.scale
+        this.span.style.left = `${x}px`
+        this.state.update(cb)
+    }
+
+    moveOutOfScreen(cb : Function) {
+        this.move(cb, w, w / 4)
+    }
+
+    moveToMiddle(cb : Function) {
+        this.move(() => {
+            document.body.removeChild(this.span)
+            cb()
+        }, w / 4, 0)
+    }
+
+    startUpdating(cb : Function) {
+        this.state.startUpdating(cb)
     }
 }
