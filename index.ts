@@ -127,7 +127,7 @@ class TextElementContainer {
     prev : TextElement = null
     animator : Animator = new Animator()
 
-    start(text : string) {
+    start(text : string, cb : Function) {
         const temp : TextElement = this.curr
         this.curr = new TextElement()
         this.curr.init(text)
@@ -136,6 +136,7 @@ class TextElementContainer {
                 this.animator.start(() => {
                     this.curr.moveToMiddle(() => {
                         this.animator.stop()
+                        cb()
                     })
                 })
             })
@@ -154,5 +155,29 @@ class TextElementContainer {
                 })
             })
         }
+    }
+}
+
+class Stage {
+
+    textElementContainer : TextElementContainer = new TextElementContainer()
+    textBox : TextBox = new TextBox()
+
+    constructor() {
+        this.textBox.init()
+    }
+
+    handleInput() {
+        this.textBox.handleInput((text) => {
+            this.textElementContainer.start(text, () => {
+                this.textBox.setFocus()
+                this.textBox.setReadOnly(false)
+            })
+        })
+    }
+
+    static init() {
+        const stage : Stage = new Stage()
+        stage.handleInput()
     }
 }
