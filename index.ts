@@ -121,3 +121,38 @@ class TextElement {
         this.state.startUpdating(cb)
     }
 }
+
+class TextElementContainer {
+    curr : TextElement = null
+    prev : TextElement = null
+    animator : Animator = new Animator()
+
+    start(text : string) {
+        const temp : TextElement = this.curr
+        this.curr = new TextElement()
+        this.curr.init(text)
+        const currCb : Function = () => {
+            this.curr.startUpdating(() => {
+                this.animator.start(() => {
+                    this.curr.moveToMiddle(() => {
+                        this.animator.stop()
+                    })
+                })
+            })
+        }
+        if (temp == null) {
+            currCb()
+
+        } else {
+            this.prev = temp
+            this.prev.startUpdating(() => {
+                this.animator.start(() => {
+                    this.prev.moveOutOfScreen(() => {
+                        this.animator.stop()
+                        currCb()
+                    })
+                })
+            })
+        }
+    }
+}
