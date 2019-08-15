@@ -46,3 +46,38 @@ class Animator {
         }
     }
 }
+
+class TextBox {
+
+    inputElement : HTMLInputElement = document.createElement('input')
+
+    init() {
+        this.inputElement.style.position = 'absolute'
+        this.inputElement.style.top =  `${50}px`
+        this.inputElement.style.width = `${w / 4}px`
+        this.inputElement.style.left = `${w / 4 }px`
+        this.inputElement.style.height = `${h / 10}px`
+        document.body.appendChild(this.inputElement)
+    }
+
+    handleInput(cb : Function) {
+        this.inputElement.onkeydown = (e) => {
+            if (e.keyCode == 13) {
+                this.setReadOnly(true)
+                cb(this.inputElement.value)
+            }
+        }
+    }
+
+    setFocus() {
+        this.inputElement.focus()
+    }
+
+    setReadOnly(flag) {
+        if (flag) {
+            this.inputElement.disabled = true
+        } else {
+            this.inputElement.removeAttribute('disabled')
+        }
+    }
+}
