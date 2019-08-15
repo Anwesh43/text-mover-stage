@@ -23,7 +23,7 @@ class State {
     startUpdating(cb : Function) {
         if (this.dir == 0) {
             this.scale = 0
-            this.prevScale = 1
+            this.prevScale = 0
             this.dir = 1
             cb()
         }
@@ -56,10 +56,10 @@ class TextBox {
 
     init() {
         this.inputElement.style.position = 'absolute'
-        this.inputElement.style.top =  `${50}px`
+        this.inputElement.style.top =  `${0}px`
         this.inputElement.style.width = `${w / 4}px`
         this.inputElement.style.left = `${w / 4 }px`
-        this.inputElement.style.height = `${h / 10}px`
+        this.inputElement.style.height = `${h / 17}px`
         document.body.appendChild(this.inputElement)
     }
 
@@ -106,15 +106,15 @@ class TextElement {
         this.state.update(cb)
     }
 
-    moveOutOfScreen(cb : Function) {
+    moveToMiddle(cb : Function) {
         this.move(cb, w, w / 4)
     }
 
-    moveToMiddle(cb : Function) {
+    moveOutOfScreen(cb : Function) {
         this.move(() => {
             document.body.removeChild(this.span)
             cb()
-        }, w / 4, 0)
+        }, w / 3, 0)
     }
 
     startUpdating(cb : Function) {
@@ -181,3 +181,5 @@ class Stage {
         stage.handleInput()
     }
 }
+
+Stage.init()
